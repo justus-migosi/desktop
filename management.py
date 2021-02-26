@@ -1,11 +1,13 @@
 import tkinter
 import tkinter as tk
+from tkinter.constants import MOVETO
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as Tk
-
+import mysql.connector as mysql
+from  tkinter import messagebox as msg
 # Create a window .
 window = tk.Tk()
-window.title("Primary School Management System :")
+window.title("School Management System :")
 # create menubar
 Menubar = tk.Menu()
 window.config(menu=Menubar)
@@ -35,18 +37,65 @@ Viewmenu.add_separator()
 Viewmenu.add_command(label="Show tables")
 Menubar.add_cascade(label="View", menu=Viewmenu)
 
+
+
 # Create TabControl.
 TabControl = ttk.Notebook(window)
-Students = tk.Frame(TabControl)
-Teachers = tk.Frame(TabControl)
-Parents = tk.Frame(TabControl)
-TabControl.add(Students, text="Students")
-TabControl.add(Teachers, text="Teachers")
-TabControl.add(Parents, text="Parents")
+LogIn_ = tk.Frame(TabControl)
+Students_ = tk.Frame(TabControl)
+Teachers_ = tk.Frame(TabControl)
+Parents_ = tk.Frame(TabControl)
+TabControl.add(LogIn_,text="LogIn")
+TabControl.add(Students_, text="Students")
+TabControl.add(Teachers_, text="Teachers")
+TabControl.add(Parents_, text="Parents")
 TabControl.pack(expand=1, fill="both")
 
+
+#LogIn tab.
+Log_In_Details=tk.LabelFrame(LogIn_,bg="red", fg="yellow", text="LogIn")
+Log_In_Details.pack(expand=1,fill="both")
+
+
+user_fill=tk.Label(Log_In_Details,bg="red",text="   ")
+user_fill.grid(column=0,row=0)
+
+user_name_label=tk.Label(Log_In_Details,text=" User Name:",bg="blue", fg="yellow")
+user_name_label.grid(column=1,row=0)
+
+user_name=tk.Entry(Log_In_Details ,width=50,show="$")
+user_name.grid(column=2,row=0)
+
+user_fill_=tk.Label(Log_In_Details,bg="red",text="                                                                       ")
+user_fill_.grid(column=0,row=1)
+
+user_password_label=tk.Label(Log_In_Details,text="   Password  ",bg="blue", fg="yellow")
+user_password_label.grid(column=1,row=1)
+user_password=tk.Entry(Log_In_Details,width=50,show="%")
+user_password.grid(column=2,row=1)
+
+user_host_label=tk.Label(Log_In_Details,text="      Host:      ",bg="blue", fg="yellow")
+user_host_label.grid(column=1,row=2)
+user_host=tk.Entry(Log_In_Details,width=50,show="&")
+user_host.grid(column=2,row=2)
+
+def login():
+       try:
+            mysql.connect(user=user_name.get(),password=user_password.get(),host=user_host.get())
+            msg.showinfo("Authentification","Log in successfull")
+            TabControl.select("Teachers_")
+        
+       except mysql.Error as e:
+            msg.showinfo("Authentification","Authentification failed "+str(e))
+        
+
+LogIn_Button=tk.Button(Log_In_Details,text="Log In ",bg="blue" ,fg="yellow",width=50,height=5,command=login)
+LogIn_Button.grid(column=2,row=3)
+
+
+
 # Create a new tab for students.
-TabControl = ttk.Notebook(Students)
+TabControl = ttk.Notebook(Students_)
 Students_Personal_Details_Create = tk.Frame(TabControl, bg="pink")
 Students_Personal_Details_Update = tk.Frame(TabControl, bg="pink")
 Students_Personal_Details_Delete = tk.Frame(TabControl, bg="pink")
@@ -67,7 +116,7 @@ Students_Personal_Details_Create_Labelframe = tk.LabelFrame(
     Students_Personal_Details_Create, bg="red", fg="yellow", text="Create New Student Records")
 Students_Personal_Details_Create_Labelframe.pack(expand=1)
 Student_first_name = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="First Name:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="First_Name:", bg="blue", fg="yellow")
 Student_first_name.grid(column=0, row=0, sticky="WE")
 Student_First_name = tk.Entry(
     Students_Personal_Details_Create_Labelframe, width=100)
@@ -133,7 +182,7 @@ Student_=tk.Label(
 Student_.grid(column=0,row=9)
 
 Student_Create = tk.Button(Students_Personal_Details_Create_Labelframe,
-                           text="Create Record", bg="yellow", fg="blue", height=6)
+                           text="Create Record:", bg="yellow", fg="blue", height=6)
 Student_Create.grid(column=0, row=9, sticky="WE")
 
 # Update student Records
@@ -142,14 +191,14 @@ Students_Personal_Details_Create_Labelframe = tk.LabelFrame(
     Students_Personal_Details_Update, bg="red", fg="yellow", text="Update student Records")
 Students_Personal_Details_Create_Labelframe.pack(expand=1)
 Student_first_name = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="First Name:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="First Name", bg="blue", fg="yellow")
 Student_first_name.grid(column=0, row=0, sticky="WE")
 Student_First_name = tk.Entry(
     Students_Personal_Details_Create_Labelframe, width=100)
 Student_First_name.grid(column=1, row=0)
 
 Student_second_name = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Second Name:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Second Name", bg="blue", fg="yellow")
 Student_second_name.grid(column=2, row=0, sticky="WE")
 Student_Second_name = tk.Entry(
     Students_Personal_Details_Create_Labelframe, width=100)
@@ -161,13 +210,13 @@ Student_ = tk.Label(
 Student_.grid(column=0, row=1)
 
 Student_third_name = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Third Name:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Third Name", bg="blue", fg="yellow")
 Student_third_name.grid(column=0, row=4, sticky="WE")
 Student_Third_name = tk.Entry(Students_Personal_Details_Create_Labelframe)
 Student_Third_name.grid(column=1, row=4, sticky="WE")
 
 Student_admission_number = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Admission No:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Admission No", bg="blue", fg="yellow")
 Student_admission_number.grid(column=2, row=4, sticky="WE")
 Student_Admission_number = tk.Entry(
     Students_Personal_Details_Create_Labelframe)
@@ -179,13 +228,14 @@ Student_ = tk.Label(
 Student_.grid(column=0, row=5)
 
 Student_gender = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Gender:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Gender", bg="blue", fg="yellow")
 Student_gender.grid(column=0, row=6, sticky="WE")
 Student_Gender = tk.Entry(Students_Personal_Details_Create_Labelframe)
 Student_Gender.grid(column=1, row=6, sticky="WE")
+       
 
 Students_parent_phone_number = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Parents Phone number:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Parent Phone number", bg="blue", fg="yellow")
 Students_parent_phone_number.grid(column=2, row=6)
 Students_Parent_phone_number = tk.Entry(
     Students_Personal_Details_Create_Labelframe)
@@ -196,8 +246,10 @@ Student_ = tk.Label(
     Students_Personal_Details_Create_Labelframe, text="       ", bg="red")
 Student_.grid(column=0, row=7)
 
+
+
 Student_location= tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Location:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Location", bg="blue", fg="yellow")
 Student_location.grid(column=0, row=8, sticky="WE")
 Student_Location = tk.Entry(Students_Personal_Details_Create_Labelframe)
 Student_Location.grid(column=1, row=8, sticky="WE")
@@ -210,7 +262,7 @@ Student_.grid(column=0,row=9)
 
 
 Student_Create = tk.Button(Students_Personal_Details_Create_Labelframe,
-                           text="Update Record", bg="yellow", fg="blue", height=6)
+                           text="Update Record:", bg="yellow", fg="blue", height=6)
 Student_Create.grid(column=0, row=9, sticky="WE")
 
 # Delete Student Record.
@@ -218,14 +270,14 @@ Students_Personal_Details_Create_Labelframe = tk.LabelFrame(
     Students_Personal_Details_Delete, bg="red", fg="yellow", text="Delete student Records")
 Students_Personal_Details_Create_Labelframe.pack(expand=1)
 Student_first_name = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="First Name:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="First Name", bg="blue", fg="yellow")
 Student_first_name.grid(column=0, row=0, sticky="WE")
 Student_First_name = tk.Entry(
     Students_Personal_Details_Create_Labelframe, width=100)
 Student_First_name.grid(column=1, row=0)
 
 Student_second_name = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Second Name:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Second Name", bg="blue", fg="yellow")
 Student_second_name.grid(column=2, row=0, sticky="WE")
 Student_Second_name = tk.Entry(
     Students_Personal_Details_Create_Labelframe, width=100)
@@ -237,13 +289,13 @@ Student_ = tk.Label(
 Student_.grid(column=0, row=1)
 
 Student_third_name = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Third Name:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Third Name", bg="blue", fg="yellow")
 Student_third_name.grid(column=0, row=4, sticky="WE")
 Student_Third_name = tk.Entry(Students_Personal_Details_Create_Labelframe)
 Student_Third_name.grid(column=1, row=4, sticky="WE")
 
 Student_admission_number = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Admission No:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Admission No", bg="blue", fg="yellow")
 Student_admission_number.grid(column=2, row=4, sticky="WE")
 Student_Admission_number = tk.Entry(
     Students_Personal_Details_Create_Labelframe)
@@ -255,13 +307,13 @@ Student_ = tk.Label(
 Student_.grid(column=0, row=5)
 
 Student_gender = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Gender:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Gender", bg="blue", fg="yellow")
 Student_gender.grid(column=0, row=6, sticky="WE")
 Student_Gender = tk.Entry(Students_Personal_Details_Create_Labelframe)
 Student_Gender.grid(column=1, row=6, sticky="WE")
 
 Students_parent_phone_number = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Parents Phone number:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Parent Phone number", bg="blue", fg="yellow")
 Students_parent_phone_number.grid(column=2, row=6)
 Students_Parent_phone_number = tk.Entry(
     Students_Personal_Details_Create_Labelframe)
@@ -273,7 +325,7 @@ Student_ = tk.Label(
 Student_.grid(column=0, row=7)
 
 Student_location= tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Location:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Location", bg="blue", fg="yellow")
 Student_location.grid(column=0, row=8, sticky="WE")
 Student_Location = tk.Entry(Students_Personal_Details_Create_Labelframe)
 Student_Location.grid(column=1, row=8, sticky="WE")
@@ -284,7 +336,7 @@ Student_=tk.Label(
 Student_.grid(column=0,row=9)
 
 Student_Create = tk.Button(Students_Personal_Details_Create_Labelframe,
-                           text="Delete Record", bg="yellow", fg="blue", height=6)
+                           text="Delete Record:", bg="yellow", fg="blue", height=6)
 Student_Create.grid(column=0, row=9, sticky="WE") 
 
 
@@ -294,14 +346,14 @@ Students_Personal_Details_Create_Labelframe = tk.LabelFrame(
     Students_Fee_Payment, bg="red", fg="yellow", text="Student Fee Payment")
 Students_Personal_Details_Create_Labelframe.pack(expand=1)
 Student_first_name = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="First Name:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="First Name", bg="blue", fg="yellow")
 Student_first_name.grid(column=0, row=0, sticky="WE")
 Student_First_name = tk.Entry(
     Students_Personal_Details_Create_Labelframe, width=100)
 Student_First_name.grid(column=1, row=0)
 
 Student_second_name = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Second Name:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Second Name", bg="blue", fg="yellow")
 Student_second_name.grid(column=2, row=0, sticky="WE")
 Student_Second_name = tk.Entry(
     Students_Personal_Details_Create_Labelframe, width=100)
@@ -313,13 +365,13 @@ Student_ = tk.Label(
 Student_.grid(column=0, row=1)
 
 Student_third_name = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Third Name:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Third Name", bg="blue", fg="yellow")
 Student_third_name.grid(column=0, row=4, sticky="WE")
 Student_Third_name = tk.Entry(Students_Personal_Details_Create_Labelframe)
 Student_Third_name.grid(column=1, row=4, sticky="WE")
 
 Student_admission_number = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Admission No:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Admission No", bg="blue", fg="yellow")
 Student_admission_number.grid(column=2, row=4, sticky="WE")
 Student_Admission_number = tk.Entry(
     Students_Personal_Details_Create_Labelframe)
@@ -331,13 +383,13 @@ Student_ = tk.Label(
 Student_.grid(column=0, row=5)
 
 Student_gender = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Gender:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Gender", bg="blue", fg="yellow")
 Student_gender.grid(column=0, row=6, sticky="WE")
 Student_Gender = tk.Entry(Students_Personal_Details_Create_Labelframe)
 Student_Gender.grid(column=1, row=6, sticky="WE")
 
 Students_parent_phone_number = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Parents Phone number:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Parents Phone number", bg="blue", fg="yellow")
 Students_parent_phone_number.grid(column=2, row=6)
 Students_Parent_phone_number = tk.Entry(
     Students_Personal_Details_Create_Labelframe)
@@ -375,14 +427,14 @@ Students_Personal_Details_Create_Labelframe = tk.LabelFrame(
     Students_Exams, bg="red", fg="yellow", text="Students Exams")
 Students_Personal_Details_Create_Labelframe.pack(expand=1)
 Student_first_name = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="First Name:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="First Name", bg="blue", fg="yellow")
 Student_first_name.grid(column=0, row=0, sticky="WE")
 Student_First_name = tk.Entry(
     Students_Personal_Details_Create_Labelframe, width=100)
 Student_First_name.grid(column=1, row=0)
 
 Student_second_name = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Second Name:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Second Name", bg="blue", fg="yellow")
 Student_second_name.grid(column=2, row=0, sticky="WE")
 Student_Second_name = tk.Entry(
     Students_Personal_Details_Create_Labelframe, width=100)
@@ -394,13 +446,13 @@ Student_ = tk.Label(
 Student_.grid(column=0, row=1)
 
 Student_third_name = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Third Name:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Third Name", bg="blue", fg="yellow")
 Student_third_name.grid(column=0, row=4, sticky="WE")
 Student_Third_name = tk.Entry(Students_Personal_Details_Create_Labelframe)
 Student_Third_name.grid(column=1, row=4, sticky="WE")
 
 Student_admission_number = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Admission No:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Admission No", bg="blue", fg="yellow")
 Student_admission_number.grid(column=2, row=4, sticky="WE")
 Student_Admission_number = tk.Entry(
     Students_Personal_Details_Create_Labelframe)
@@ -412,13 +464,13 @@ Student_ = tk.Label(
 Student_.grid(column=0, row=5)
 
 Student_gender = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Gender:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Gender", bg="blue", fg="yellow")
 Student_gender.grid(column=0, row=6, sticky="WE")
 Student_Gender = tk.Entry(Students_Personal_Details_Create_Labelframe)
 Student_Gender.grid(column=1, row=6, sticky="WE")
 
 Students_parent_phone_number = tk.Label(
-    Students_Personal_Details_Create_Labelframe, text="Parents Phone number:", bg="blue", fg="yellow")
+    Students_Personal_Details_Create_Labelframe, text="Parent Phone number", bg="blue", fg="yellow")
 Students_parent_phone_number.grid(column=2, row=6)
 Students_Parent_phone_number = tk.Entry(
     Students_Personal_Details_Create_Labelframe)
@@ -461,7 +513,7 @@ Students_Parent_phone_number = tk.Entry(
     Students_Personal_Details_Create_Labelframe)
 Students_Parent_phone_number.grid(column=1, row=0, sticky="WE")
 Students_Create = tk.Button(Students_Personal_Details_Create_Labelframe,
-                            text="Search using ADM Number", bg="yellow", fg="blue", height=4)
+                            text="Search using ADM Number:", bg="yellow", fg="blue", height=4)
 Students_Create.grid(column=0, row=1, sticky="WE")
 
 # Filling up space.
@@ -482,7 +534,7 @@ Students_Create = tk.Button(Students_Personal_Details_Create_Labelframe,
 Students_Create.grid(column=0, row=8, sticky="WE")
 
 # Create a new tab for Teachers
-TabControl = ttk.Notebook(Teachers)
+TabControl = ttk.Notebook(Teachers_)
 Create_New_Teachers_Records = tk.Frame(TabControl, bg="pink")
 Update_Teachers_Records = tk.Frame(TabControl, bg="pink")
 Delete_Teachers_Records = tk.Frame(TabControl, bg="pink")
@@ -495,7 +547,7 @@ TabControl.pack(expand=1, fill="both")
 
 
 # Create a new tab for Parents.
-TabControl = ttk.Notebook(Parents)
+TabControl = ttk.Notebook(Parents_)
 Parents_Personal_Details_Create = tk.Frame(TabControl, bg="pink")
 Parents_Personal_Details_Update = tk.Frame(TabControl, bg="pink")
 Parents_Personal_Details_Delete = tk.Frame(TabControl, bg="pink")
@@ -513,14 +565,14 @@ Parents_Personal_Details_Create_Labelframe = tk.LabelFrame(
     Parents_Personal_Details_Create, bg="red", fg="yellow", text="Create New Parent Records")
 Parents_Personal_Details_Create_Labelframe.pack(expand=1)
 Parent_first_name = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="First Name:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="First Name", bg="blue", fg="yellow")
 Parent_first_name.grid(column=0, row=0, sticky="WE")
 Parent_First_name = tk.Entry(
     Parents_Personal_Details_Create_Labelframe, width=100)
 Parent_First_name.grid(column=1, row=0)
 
 Parent_second_name = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Second Name:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Second Name", bg="blue", fg="yellow")
 Parent_second_name.grid(column=2, row=0, sticky="WE")
 Parent_Second_name = tk.Entry(
     Parents_Personal_Details_Create_Labelframe, width=100)
@@ -532,7 +584,7 @@ Parent_ = tk.Label(
 Parent_.grid(column=0, row=1)
 
 Parent_third_name = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Third Name:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Third Name", bg="blue", fg="yellow")
 Parent_third_name.grid(column=0, row=4, sticky="WE")
 Parent_Third_name = tk.Entry(Parents_Personal_Details_Create_Labelframe)
 Parent_Third_name.grid(column=1, row=4, sticky="WE")
@@ -550,7 +602,7 @@ Parent_ = tk.Label(
 Parent_.grid(column=0, row=5)
 
 Parent_gender = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Gender:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Gender", bg="blue", fg="yellow")
 Parent_gender.grid(column=0, row=6, sticky="WE")
 Parent_Gender = tk.Entry(Parents_Personal_Details_Create_Labelframe)
 Parent_Gender.grid(column=1, row=6, sticky="WE")
@@ -568,7 +620,7 @@ Parent_ = tk.Label(
 Parent_.grid(column=0, row=7)
 
 Parent_location= tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Location:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Location", bg="blue", fg="yellow")
 Parent_location.grid(column=0, row=8, sticky="WE")
 Parent_Location = tk.Entry(Parents_Personal_Details_Create_Labelframe)
 Parent_Location.grid(column=1, row=8, sticky="WE")
@@ -588,14 +640,14 @@ Parents_Personal_Details_Create_Labelframe = tk.LabelFrame(
     Parents_Personal_Details_Update, bg="red", fg="yellow", text="Update Parents Records")
 Parents_Personal_Details_Create_Labelframe.pack(expand=1)
 Parents_first_name = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="First Name:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="First Name", bg="blue", fg="yellow")
 Parents_first_name.grid(column=0, row=0, sticky="WE")
 Parents_First_name = tk.Entry(
     Parents_Personal_Details_Create_Labelframe, width=100)
 Parents_First_name.grid(column=1, row=0)
 
 Parents_second_name = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Second Name:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Second Name", bg="blue", fg="yellow")
 Parents_second_name.grid(column=2, row=0, sticky="WE")
 Parents_Second_name = tk.Entry(
     Parents_Personal_Details_Create_Labelframe, width=100)
@@ -607,7 +659,7 @@ Parents_ = tk.Label(
 Parents_.grid(column=0, row=1)
 
 Parents_third_name = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Third Name:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Third Name", bg="blue", fg="yellow")
 Parents_third_name.grid(column=0, row=4, sticky="WE")
 Parents_Third_name = tk.Entry(Parents_Personal_Details_Create_Labelframe)
 Parents_Third_name.grid(column=1, row=4, sticky="WE")
@@ -625,7 +677,7 @@ Parents_ = tk.Label(
 Parents_.grid(column=0, row=5)
 
 Parents_gender = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Gender:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Gender", bg="blue", fg="yellow")
 Parents_gender.grid(column=0, row=6, sticky="WE")
 Parents_Gender = tk.Entry(Parents_Personal_Details_Create_Labelframe)
 Parents_Gender.grid(column=1, row=6, sticky="WE")
@@ -643,7 +695,7 @@ Parents_ = tk.Label(
 Parents_.grid(column=0, row=7)
 
 Parent_location= tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Location:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Location", bg="blue", fg="yellow")
 Parent_location.grid(column=0, row=8, sticky="WE")
 Parent_Location = tk.Entry(Parents_Personal_Details_Create_Labelframe)
 Parent_Location.grid(column=1, row=8, sticky="WE")
@@ -662,7 +714,7 @@ Parents_Personal_Details_Create_Labelframe = tk.LabelFrame(
 List_of_Parents, bg="red", fg="yellow", text="List of  Parents Records")
 Parents_Personal_Details_Create_Labelframe.pack(expand=1, fill="both")
 Parents_phone_number = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Search using ADM Number", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Search using ADM Number:", bg="blue", fg="yellow")
 Parents_phone_number.grid(column=0, row=0)
 Parents_Parent_phone_number = tk.Entry(
     Parents_Personal_Details_Create_Labelframe)
@@ -693,14 +745,14 @@ Parents_Personal_Details_Create_Labelframe = tk.LabelFrame(
     Parents_Personal_Details_Delete, bg="red", fg="yellow", text="Delete Parents Records")
 Parents_Personal_Details_Create_Labelframe.pack(expand=1)
 Parents_first_name = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="First Name:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="First Name", bg="blue", fg="yellow")
 Parents_first_name.grid(column=0, row=0, sticky="WE")
 Parents_First_name = tk.Entry(
     Parents_Personal_Details_Create_Labelframe, width=100)
 Parents_First_name.grid(column=1, row=0)
 
 Parents_second_name = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Second Name:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Second Name", bg="blue", fg="yellow")
 Parents_second_name.grid(column=2, row=0, sticky="WE")
 Parents_Second_name = tk.Entry(
     Parents_Personal_Details_Create_Labelframe, width=100)
@@ -712,7 +764,7 @@ Parents_ = tk.Label(
 Parents_.grid(column=0, row=1)
 
 Parents_third_name = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Third Name:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Third Name", bg="blue", fg="yellow")
 Parents_third_name.grid(column=0, row=4, sticky="WE")
 Parents_Third_name = tk.Entry(Parents_Personal_Details_Create_Labelframe)
 Parents_Third_name.grid(column=1, row=4, sticky="WE")
@@ -730,13 +782,13 @@ Parents_ = tk.Label(
 Parents_.grid(column=0, row=5)
 
 Parents_gender = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Gender:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Gender", bg="blue", fg="yellow")
 Parents_gender.grid(column=0, row=6,sticky="WE" )
 Parents_Gender = tk.Entry(Parents_Personal_Details_Create_Labelframe)
 Parents_Gender.grid(column=1, row=6, sticky="WE")
 
 Parents_phone_number = tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Phone number:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Parents Phone number", bg="blue", fg="yellow")
 Parents_phone_number.grid(column=2, row=6)
 Parents_Parent_phone_number = tk.Entry(
     Parents_Personal_Details_Create_Labelframe)
@@ -748,7 +800,7 @@ Parents_ = tk.Label(
 Parents_.grid(column=0, row=7)
 
 Parent_location= tk.Label(
-    Parents_Personal_Details_Create_Labelframe, text="Location:", bg="blue", fg="yellow")
+    Parents_Personal_Details_Create_Labelframe, text="Location", bg="blue", fg="yellow")
 Parent_location.grid(column=0, row=8, sticky="WE") 
 Parent_Location = tk.Entry(Students_Personal_Details_Create_Labelframe)
 Parent_Location.grid(column=1, row=8, sticky="WE")
@@ -768,14 +820,14 @@ Teachers_Personal_Details_Create_Labelframe = tk.LabelFrame(
     Create_New_Teachers_Records, bg="red", fg="yellow", text="Create New  Teachers Records")
 Teachers_Personal_Details_Create_Labelframe.pack(expand=1)
 Teachers_first_name = tk.Label(
-    Teachers_Personal_Details_Create_Labelframe, text="First Name:", bg="blue", fg="yellow")
+    Teachers_Personal_Details_Create_Labelframe, text="First Name", bg="blue", fg="yellow")
 Teachers_first_name.grid(column=0, row=0, sticky="WE")
 Teachers_First_name = tk.Entry(
     Teachers_Personal_Details_Create_Labelframe, width=100)
 Teachers_First_name.grid(column=1, row=0)
 
 Teachers_second_name = tk.Label(
-    Teachers_Personal_Details_Create_Labelframe, text="Second Name:", bg="blue", fg="yellow")
+    Teachers_Personal_Details_Create_Labelframe, text="Second Name", bg="blue", fg="yellow")
 Teachers_second_name.grid(column=2, row=0, sticky="WE")
 Teachers_Second_name = tk.Entry(
     Teachers_Personal_Details_Create_Labelframe, width=100)
@@ -787,7 +839,7 @@ Teachers_ = tk.Label(
 Teachers_.grid(column=0, row=1)
 
 Teachers_third_name = tk.Label(
-    Teachers_Personal_Details_Create_Labelframe, text="Third Name:", bg="blue", fg="yellow")
+    Teachers_Personal_Details_Create_Labelframe, text="Third Name", bg="blue", fg="yellow")
 Teachers_third_name.grid(column=0, row=4, sticky="WE")
 Teachers_Third_name = tk.Entry(Teachers_Personal_Details_Create_Labelframe)
 Teachers_Third_name.grid(column=1, row=4, sticky="WE")
@@ -805,13 +857,13 @@ Teachers_ = tk.Label(
 Teachers_.grid(column=0, row=5)
 
 Teachers_gender = tk.Label(
-    Teachers_Personal_Details_Create_Labelframe, text="Gender:", bg="blue", fg="yellow")
+    Teachers_Personal_Details_Create_Labelframe, text="Gender", bg="blue", fg="yellow")
 Teachers_gender.grid(column=0, row=6, sticky="WE")
 Teachers_Gender = tk.Entry(Teachers_Personal_Details_Create_Labelframe)
 Teachers_Gender.grid(column=1, row=6, sticky="WE")
 
 Teachers_phone_number = tk.Label(
-    Teachers_Personal_Details_Create_Labelframe, text="Phone number:", bg="blue", fg="yellow")
+    Teachers_Personal_Details_Create_Labelframe, text="Phone number", bg="blue", fg="yellow")
 Teachers_phone_number.grid(column=2, row=6)
 Teachers_Parent_phone_number = tk.Entry(
     Teachers_Personal_Details_Create_Labelframe)
@@ -823,7 +875,7 @@ Teachers_ = tk.Label(
 Teachers_.grid(column=0, row=7)
 
 Teacher_location= tk.Label(
-    Teachers_Personal_Details_Create_Labelframe, text="Location:", bg="blue", fg="yellow")
+    Teachers_Personal_Details_Create_Labelframe, text="Location", bg="blue", fg="yellow")
 Teacher_location.grid(column=0, row=8, sticky="WE")
 Teacher_Location = tk.Entry(Teachers_Personal_Details_Create_Labelframe)
 Teacher_Location.grid(column=1, row=8, sticky="WE")
@@ -854,7 +906,7 @@ Teachers_First_name = tk.Entry(
 Teachers_First_name.grid(column=1, row=0)
 
 Teachers_second_name = tk.Label(
-    Teachers_Personal_Details_Create_Labelframe, text="Second Name:", bg="blue", fg="yellow")
+    Teachers_Personal_Details_Create_Labelframe, text="Second Name", bg="blue", fg="yellow")
 Teachers_second_name.grid(column=2, row=0, sticky="WE")
 Teachers_Second_name = tk.Entry(
     Teachers_Personal_Details_Create_Labelframe, width=100)
@@ -866,7 +918,7 @@ Teachers_ = tk.Label(
 Teachers_.grid(column=0, row=1)
 
 Teachers_third_name = tk.Label(
-    Teachers_Personal_Details_Create_Labelframe, text="Third Name:", bg="blue", fg="yellow")
+    Teachers_Personal_Details_Create_Labelframe, text="Third Name", bg="blue", fg="yellow")
 Teachers_third_name.grid(column=0, row=4, sticky="WE")
 Teachers_Third_name = tk.Entry(Teachers_Personal_Details_Create_Labelframe)
 Teachers_Third_name.grid(column=1, row=4, sticky="WE")
@@ -884,7 +936,7 @@ Teachers_ = tk.Label(
 Teachers_.grid(column=0, row=5)
 
 Teachers_gender = tk.Label(
-    Teachers_Personal_Details_Create_Labelframe, text="Gender:", bg="blue", fg="yellow")
+    Teachers_Personal_Details_Create_Labelframe, text="Gender", bg="blue", fg="yellow")
 Teachers_gender.grid(column=0, row=6, sticky="WE")
 Teachers_Gender = tk.Entry(Teachers_Personal_Details_Create_Labelframe)
 Teachers_Gender.grid(column=1, row=6, sticky="WE")
@@ -902,7 +954,7 @@ Teachers_ = tk.Label(
 Teachers_.grid(column=0, row=7)
 
 Teacher_location= tk.Label(
-    Teachers_Personal_Details_Create_Labelframe, text="Location:", bg="blue", fg="yellow")
+    Teachers_Personal_Details_Create_Labelframe, text="Location", bg="blue", fg="yellow")
 Teacher_location.grid(column=0, row=8, sticky="WE")
 Teacher_Location = tk.Entry(Teachers_Personal_Details_Create_Labelframe)
 Teacher_Location.grid(column=1, row=8, sticky="WE")
@@ -948,7 +1000,7 @@ Teachers_Third_name = tk.Entry(Teachers_Personal_Details_Create_Labelframe)
 Teachers_Third_name.grid(column=1, row=4, sticky="WE")
 
 Teachers_admission_number = tk.Label(
-    Teachers_Personal_Details_Create_Labelframe, text="TSC No:", bg="blue", fg="yellow")
+    Teachers_Personal_Details_Create_Labelframe, text="TSC No", bg="blue", fg="yellow")
 Teachers_admission_number.grid(column=2, row=4, sticky="WE")
 Teachers_Admission_number = tk.Entry(
     Teachers_Personal_Details_Create_Labelframe)
@@ -966,7 +1018,7 @@ Teachers_Gender = tk.Entry(Teachers_Personal_Details_Create_Labelframe)
 Teachers_Gender.grid(column=1, row=6, sticky="WE")
 
 Teachers_phone_number = tk.Label(
-    Teachers_Personal_Details_Create_Labelframe, text="Phone number:", bg="blue", fg="yellow")
+    Teachers_Personal_Details_Create_Labelframe, text="Phone number", bg="blue", fg="yellow")
 Teachers_phone_number.grid(column=2, row=6)
 Teachers_Parent_phone_number = tk.Entry(
     Teachers_Personal_Details_Create_Labelframe)
